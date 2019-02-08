@@ -1,0 +1,19 @@
+{
+  "name" : "cassandra-sink-top",
+  "config" : {
+    "connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",
+    "tasks.max" : 1,
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+
+
+    "transforms" : "createKey",
+    "transforms.createKey.fields" : "URL",
+    "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
+    "cassandra.contact.points" : "10.0.0.9",
+    "cassandra.keyspace" : "combined",
+    "topics" : "TOP_STREAM_PART",
+    "cassandra.offset.storage.table" : "top_offsets"
+  }
+}
