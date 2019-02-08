@@ -52,7 +52,7 @@ value_schema_pv_str = """
    "name": "value",
    "type": "record",
    "fields" : [
-        {"name" : "user_id", "type" : "string"},
+        {"name" : "email", "type" : "string"},
         {"name" : "url", "type" : "string"},
         {"name" : "timestamp", "type" : "string"},
         {"name" : "pageview_id", "type" : "string"}

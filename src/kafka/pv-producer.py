@@ -11,17 +11,20 @@ from webpage_info import WEBSITE_NAME, GROUP
 from schema_info import key_schema_pv_str, value_schema_pv_str
 import argparse
 
-
-NUM_USERS = 500
+# configuartions for producer
+NUM_USERS = 5000
 PV_TOPIC = 'pageview'
 
+# loading the schema from schema definitions
 value_schema_pv = avro.loads(value_schema_pv_str)
 key_schema_pv = avro.loads(key_schema_pv_str)
 
 
+# Producer for pageviews
 class ProducerAvroPV(object):
 
-    def __init__(self, server, schema_registry, topic, users):
+    def __init__(self, server, schema_registry, topic, emails):
+        # define pageview producer with avro serialization
         self.producer = AvroProducer(
             {
                 'bootstrap.servers': server,
@@ -30,57 +33,70 @@ class ProducerAvroPV(object):
             default_key_schema=key_schema_pv,
             default_value_schema=value_schema_pv
         )
-        self.topic = topic
-        self.users = users
+        self.topic = topic #topic to produce to
+        self.emails = emails
 
+    # pageview producer
     def pv_produce(self):
         while True:
-            user_id = numpy.random.choice(self.users)['mail']
+            # email list of users
+            email = numpy.random.choice(self.emails)
+
+            #website url with random page and group
             url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,101))
+
+            #timestamp of pageview
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+            # universally unique id for pageview
             pageview_id = str(uuid.uuid4())
 
+            # setting key,value pair
             key = {"pageview_id" : pageview_id}
             value = {
-                "user_id": user_id,
+                "email": email,
                 "url" : url,
                 "timestamp" : timestamp,
                 "pageview_id" : pageview_id
             }
 
+            # producing entry to topic
             self.producer.produce(topic = self.topic, value=value, key=key)
-            time.sleep(0.5);
-            print("record created:" + json.dumps(value))
+            time.sleep(0.01);
+
         print("\nFlushing records")
         self.producer.flush()
 
 
-#if __name__ == "__main__":
 def main(args):
-    #server = str(sys.argv[1])
-    #schema_registry = str(sys.argv[2])
+    # getting arguments for producer
     server = args.bootstrap_servers
     schema_registry = args.schema_registry
     topic = args.topic
+    instance = args.instance
 
+    # creating fake list of emails
     faker = Faker()
-
-    users = []
+    emails = []
     for i in range(NUM_USERS):
-        faker.seed((i+9092)*32)
-        users.append(faker.simple_profile())
+        faker.seed((i+9092)*instance) # seed to ensure consistent emails
+        emails.append(faker.ascii_safe_email())
 
-    p = ProducerAvroPV(server, schema_registry, topic, users)
+    # defining producer and beginning production
+    p = ProducerAvroPV(server, schema_registry, topic, emails)
     p.pv_produce()
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Client for handling Avro data")
+    # argument parser to give the option of defining inputs
+    parser = argparse.ArgumentParser(description="Pageview producer")
     parser.add_argument('-b', dest="bootstrap_servers",
                         default="localhost:9092", help="Bootstrap broker(s) (host[:port])")
     parser.add_argument('-s', dest="schema_registry",
                         default="http://localhost:8081", help="Schema Registry (http(s)://host[:port]")
     parser.add_argument('-t', dest="topic", default="pageview",
                         help="Topic name")
+    parser.add_argument('-i', dest="instance", default=1,
+                        help="number of the tmux machine that is performing the query")
 
     main(parser.parse_args())

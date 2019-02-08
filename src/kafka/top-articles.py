@@ -10,13 +10,14 @@ from webpage_info import WEBSITE_NAME, GROUP
 from schema_info import key_schema_str, value_schema_str
 import argparse
 
-
+# loading schema to top articles
 value_schema = avro.loads(value_schema_str)
 key_schema = avro.loads(key_schema_str)
 
+# producer class for top-articles
 class ProducerAvroArticles(object):
-
     def __init__(self, server, schema_registry, topic):
+        # define top-articles producer with avro serialization
         self.producer = AvroProducer(
             {
                 'bootstrap.servers': server,
@@ -27,12 +28,19 @@ class ProducerAvroArticles(object):
         )
         self.topic = topic
 
-    def pv_produce(self):
+    # top-articles producer
+    def top_produce(self):
         while True:
+            # timestamp for this round of top-articles
+            # uses one timestamp for each round of top-articles
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            for i in range(15):
+            # list of top ten articles
+            for i in range(10):
+                #website url with random page and group
                 url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,101))
+
+                # kev,value definition
                 key = {
                     "url" : url
                 }
@@ -41,24 +49,29 @@ class ProducerAvroArticles(object):
                     "timestamp" : timestamp
                 }
 
+                # produce top-articles to topic
                 self.producer.produce(topic = self.topic, value=value, key=key)
-                print("Record value: " + json.dumps(value))
-            time.sleep(3);
+
+            # produce new list of top-articles every 60 seconds
+            time.sleep(60);
         print("\nFlushing records")
         self.producer.flush()
 
 
 def main(args):
+    # getting arguments for producer
     server = args.bootstrap_servers
     schema_registry = args.schema_registry
     topic = args.topic
 
+    #defining producer and starting production
     p = ProducerAvroArticles(server, schema_registry, topic)
-    p.pv_produce()
+    p.top_produce()
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Client for handling Avro data")
+    # argument parser to give the option of defining inputs
+    parser = argparse.ArgumentParser(description="Top article producer")
     parser.add_argument('-b', dest="bootstrap_servers",
                         default="localhost:9092", help="Bootstrap broker(s) (host[:port])")
     parser.add_argument('-s', dest="schema_registry",
