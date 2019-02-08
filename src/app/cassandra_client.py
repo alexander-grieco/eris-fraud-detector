@@ -17,8 +17,8 @@ def prepare_top_query(session):
 	return session.prepare(query)
 
 def prepare_combined_query(session):
-	query = "select url from combined_real where email=? allow filtering"
-	return session.prepare(query)
+    query = "select url from combined_real where email=? allow filtering"
+    return session.prepare(query)
 
 
 
@@ -27,7 +27,6 @@ def get_combined(email, prepared_query, session):
     try:
         rows = count.result()
         df = pd.DataFrame(list(rows))
-        #df = list(rows)
     except ReadTimeout:
         log.exception("get_combined query timed out:")
     return df

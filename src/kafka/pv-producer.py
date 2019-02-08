@@ -73,13 +73,12 @@ def main(args):
     server = args.bootstrap_servers
     schema_registry = args.schema_registry
     topic = args.topic
-    instance = args.instance
 
     # creating fake list of emails
     faker = Faker()
     emails = []
     for i in range(NUM_USERS):
-        faker.seed((i+9092)*instance) # seed to ensure consistent emails
+        faker.seed(i + 9092) # seed to ensure consistent emails
         emails.append(faker.ascii_safe_email())
 
     # defining producer and beginning production
@@ -96,7 +95,5 @@ if __name__ == '__main__':
                         default="http://localhost:8081", help="Schema Registry (http(s)://host[:port]")
     parser.add_argument('-t', dest="topic", default="pageview",
                         help="Topic name")
-    parser.add_argument('-i', dest="instance", default=1,
-                        help="number of the tmux machine that is performing the query")
 
     main(parser.parse_args())

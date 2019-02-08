@@ -8,7 +8,7 @@ for ID in `seq 1 $NUM_SPAWNS`;
 do
     echo $ID
     tmux new-window -t $ID
-    tmux send-keys -t $SESSION:$ID 'python pv-producer.py' '-i' "$ID"   C-m
+    tmux send-keys -t $SESSION:$ID 'python pv-producer.py'  C-m
 done
 
 # only one producer for top-articles (only want one)
