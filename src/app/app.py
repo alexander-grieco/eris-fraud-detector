@@ -19,6 +19,7 @@ WEBSITE='https://fakenews.com/'
 
 session = cassandra_client.start_connection(HOST, KEYSPACE)
 prep_top_query = cassandra_client.prepare_top_query(session)
+#prep_combined_query = cassandra_client.prepare_combined_query(session)
 prep_combined_query = cassandra_client.prepare_combined_query(session)
 
 EMAILS = []
@@ -66,8 +67,9 @@ app.layout = html.Div(children=[
 def update_combined(user_email, table_update):
     tables = []
     for e in user_email:
-        df2 = cassandra_client.get_combined(e, prep_combined_query, session)
         df1 = cassandra_client.get_top(prep_top_query, session)
+        df2 = cassandra_client.get_combined(e, df1['url'].values.tolist(), prep_combined_query, session)
+
 
         df = pd.DataFrame()
         df['Suggested'] = ""
@@ -77,7 +79,7 @@ def update_combined(user_email, table_update):
 
         else:
             common = df1.merge(df2,on=['url','url'])
-            df['Suggested'] = df1[(~df1.url.isin(common.url))].values.tolist()
+            df['Suggested'] = df1[(~df1.url.isin(common.url))].values.tolist()[:3]
             df['Visited'] = pd.Series(df1[(df1.url.isin(common.url))].values.tolist()).dropna()
 
         tables.append(html.Div(children=[html.Div(e), html.Div(dash_table.DataTable(
