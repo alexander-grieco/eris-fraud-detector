@@ -8,10 +8,12 @@ A video demo of the application can be found [here](https://www.youtube.com/watc
 2. [Pipeline](README.md#Pipeline)
 3. [Starting Project](README.md#Starting-Project)
     1. [Setting Up Clusters](README.md#setting-up-clusters)
-        1. [Confluent Kafka](README.md#setting-up-kafka)
+        1. [Confluent Kafka](README.md#setting-up-confluent)
         2. [Cassandra](README.md#setting-up-cassandra)
         3. [Dash](README.md#setting-up-dash)
     2. [Running New-news](README.md#running-new-news)
+        1. [Loading Kafka Services](README.md#loading-kafka-services)
+        2. [Loading Connectors](README.md#loading-connectors)
 
 
 # Motivation
@@ -53,6 +55,8 @@ Next you need to use the files list in this repository under ./config/confluent 
 
 Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers
 
+Then transfer all the contents form the src folder and the scripts folder in this repository to each Kafka broker.
+
 ### Setting up Cassandra
 On each Cassandra node, install the most recent Cassandra 3.0 download from [this](https://cassandra.apache.org/download/) page. Then, go to <path-to-Cassandra>/conf and edit the cassandra.yaml file according to the directions under the "Configure Cassandra" headline on [this](https://github.com/InsightDataScience/data-engineering-ecosystem/wiki/cassandra) page. Make sure to run the "cassandra" command to build the configuration after you are done editing the cassandra.yaml file.
 
@@ -62,3 +66,49 @@ Transfer all files from the ./src/app folder into dash and then follow [this](ht
 
 
 ## Running New-news
+### Loading Kafka Services
+Run the following commands on each Kafka broker BEFORE going to next step (assumes your confluent folder is in the home directory)
+1. ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties
+2. ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties
+3. ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties
+4. (Only do this on master broker) Start data generation by running this command: bash ~/scripts/kafka-producer.sh 5 produce. This script starts the data generation. The 5 refers to the number of tmux sessions that will be started and the "produce" input is the name of the session. To stop data generation simply run this command: tmux kill-session -t produce.
+5. ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties
+6. ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql
+
+
+### Loading Connectors
+Then, on any of your Kafka brokers, run the following two commands to load the respective connectors to transfer data from Kafka to Cassandra. Again, remember to update the input for cassandra.contact.points with your Cassandra cluster's private ips.
+
+1. curl -X POST -H "Content-Type: application/json" --data '{  
+	"name" : "cassandra-sink-combined",  
+	"config" : {    
+		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
+		"tasks.max" : 1,   "value.converter": "io.confluent.connect.avro.AvroConverter",    
+		"key.converter": "org.apache.kafka.connect.storage.StringConverter",    
+		"value.converter.schema.registry.url": "http://localhost:8081",    
+		"transforms" : "createKey",    "transforms.createKey.fields" : "KEY",    
+		"transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",    
+		"cassandra.contact.points" : [Private_IPs],    
+		"cassandra.keyspace" : "combined_dist",    
+		"topics" : "COMBINED_FINAL",    
+		"cassandra.offset.storage.table" : "combined_offset"  
+	}
+}' http://localhost:8083/connectors
+
+2. curl -X POST -H "Content-Type: application/json" --data '{  
+	"name" : "cassandra-sink-top",  
+	"config" : {    
+		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
+		"tasks.max" : 1,
+		"value.converter": "io.confluent.connect.avro.AvroConverter",    
+		"key.converter": "org.apache.kafka.connect.storage.StringConverter",    
+		"value.converter.schema.registry.url": "http://localhost:8081",   
+		"transforms" : "createKey",   
+		"transforms.createKey.fields" : "URL",    
+		"transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",    
+		"cassandra.contact.points" : [Private_IPs],
+		"cassandra.keyspace" : "combined_dist",
+		"topics" : "TOP_STREAM_PART",    
+		"cassandra.offset.storage.table" : "top_offsets"  
+	}
+}' http://localhost:8083/connectors
