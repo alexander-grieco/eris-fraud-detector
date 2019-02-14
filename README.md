@@ -4,9 +4,9 @@ My Insight Data Engineering project for the NY Winter 2019 session. New-news is 
 A video demo of the application can be found [here](https://www.youtube.com/watch?v=fFACYU7QMPk).
 
 # Table of Contents
-[Motivation](README.md#Motivation)
-[Pipeline](README.md#Pipeline)
-[Starting Project](README.md#Starting-Project)
+1. [Motivation](README.md#Motivation)
+2. [Pipeline](README.md#Pipeline)
+3. [Starting Project](README.md#Starting-Project)
   [Setting Up Clusters](README.md#setting-up-clusters)
     [Confluent Kafka](README.md#setting-up-kafka)
     [Cassandra](README.md#setting-up-cassandra)
