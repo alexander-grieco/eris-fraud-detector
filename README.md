@@ -3,6 +3,17 @@ My Insight Data Engineering project for the NY Winter 2019 session. New-news is 
 
 A video demo of the application can be found [here](https://www.youtube.com/watch?v=fFACYU7QMPk).
 
+# Table of Contents
+[Motivation](README.md#Motivation)
+[Pipeline](README.md#Pipeline)
+[Starting Project](README.md#Starting-Project)
+  [Setting Up Clusters](README.md#setting-up-clusters)
+    [Confluent Kafka](README.md#setting-up-kafka)
+    [Cassandra](README.md#setting-up-cassandra)
+    [Dash](README.md#setting-up-dash)
+  [Running New-news](README.md#running-new-news)
+
+
 # Motivation
 According to a 2014 study by Chartbeat, 55% of users are spending 15 seconds or less on each page on the websites they track (mainly online periodicals). This shows that user engagement is an incredibly hard thing to retain. One way to improve user engagement is to not display content that is stale to the user. New-news fixes this problem by tracking user activity and ensuring that any suggestions listed on each page prioritize pages the user has not visited.
 
