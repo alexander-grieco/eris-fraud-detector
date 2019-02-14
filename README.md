@@ -7,11 +7,11 @@ A video demo of the application can be found [here](https://www.youtube.com/watc
 1. [Motivation](README.md#Motivation)
 2. [Pipeline](README.md#Pipeline)
 3. [Starting Project](README.md#Starting-Project)
-  [Setting Up Clusters](README.md#setting-up-clusters)
-    [Confluent Kafka](README.md#setting-up-kafka)
-    [Cassandra](README.md#setting-up-cassandra)
-    [Dash](README.md#setting-up-dash)
-  [Running New-news](README.md#running-new-news)
+  1. [Setting Up Clusters](README.md#setting-up-clusters)
+    1. [Confluent Kafka](README.md#setting-up-kafka)
+    2. [Cassandra](README.md#setting-up-cassandra)
+    3. [Dash](README.md#setting-up-dash)
+  2. [Running New-news](README.md#running-new-news)
 
 
 # Motivation
