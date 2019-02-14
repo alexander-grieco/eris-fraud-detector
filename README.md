@@ -24,7 +24,7 @@ According to a 2014 study by Chartbeat, 55% of users are spending 15 seconds or 
 
 New-news runs a pipeline on the AWS cloud, using the following cluster configurations:
 
-* three m4.large EC2 instances for Kafka (Confluent platform with KSQL)
+* three m4.large EC2 instances for Kafka (Confluent platform with KSQL and Kafka Connectors)
 * three m4.large EC2 instances for Cassandra
 * one t2.micro EC2 instance to run the Dash front-end application
 
