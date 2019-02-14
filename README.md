@@ -93,7 +93,7 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "cassandra.keyspace" : "combined_dist",   
     "topics" : "COMBINED_FINAL",    
     "cassandra.offset.storage.table" : "combined_offset"          
-	}  
+	}
 }' http://localhost:8083/connectors
 
 2. curl -X POST -H "Content-Type: application/json" --data '{  
