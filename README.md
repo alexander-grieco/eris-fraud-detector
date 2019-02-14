@@ -30,7 +30,8 @@ Check [this](https://docs.confluent.io/current/installation/installing_cp/zip-ta
 
 Unzip the file and rename the parent directory to confluent.
 
-Next you need to update the following configuration files using the matching configuration files listed in this repo under ./config/confluent:
+
+Next you need to use the files list in this repository under ./config/confluent and update the corresponding files on each Kafka node located in the following directories
 * confluent/etc/kafka/zookeeper.properties
 * confluent/etc/kafka/server.properties
 * confluent/etc/schema-registry/schema-registry.properties
@@ -38,4 +39,14 @@ Next you need to update the following configuration files using the matching con
 * confluent/etc/confluent-control-center/control-center.properties
 * confluent/etc/ksql/ksql-server.properties
 
-Make sure to update any public DNS address or private IPs to match the configuration of your servers
+Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers
+
+## Setting up Cassandra
+On each Cassandra node, install the most recent Cassandra 3.0 download from (this)[https://cassandra.apache.org/download/] page. Then, go to <path-to-Cassandra>/conf and edit the cassandra.yaml file according to the directions under the "Configure Cassandra" headline on (this)[https://github.com/InsightDataScience/data-engineering-ecosystem/wiki/cassandra] page. Make sure to run the "cassandra" command to build the configuration after you are done editing the cassandra.yaml file.
+
+
+## Setting up Dash
+Transfer all files from the ./src/app folder into dash and then follow [this](https://www.digitalocean.com/community/tutorials/how-to-deploy-python-wsgi-apps-using-gunicorn-http-server-behind-nginx) tutorial to host the dash app on your dash server.
+
+
+## Running New-news
