@@ -82,33 +82,34 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
 1. curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-combined",  
 	"config" : {    
-		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
-		"tasks.max" : 1,   "value.converter": "io.confluent.connect.avro.AvroConverter",    
-		"key.converter": "org.apache.kafka.connect.storage.StringConverter",    
-		"value.converter.schema.registry.url": "http://localhost:8081",    
-		"transforms" : "createKey",    "transforms.createKey.fields" : "KEY",    
-		"transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",    
-		"cassandra.contact.points" : [Private_IPs],    
-		"cassandra.keyspace" : "combined_dist",    
-		"topics" : "COMBINED_FINAL",    
-		"cassandra.offset.storage.table" : "combined_offset"  
+		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",
+    "tasks.max" : 1,   "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "transforms" : "createKey",
+    "transforms.createKey.fields" : "KEY",
+    "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
+    "cassandra.contact.points" : [Private_IPs],
+    "cassandra.keyspace" : "combined_dist",
+    "topics" : "COMBINED_FINAL",
+    "cassandra.offset.storage.table" : "combined_offset"  
 	}
 }' http://localhost:8083/connectors
 
 2. curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-top",  
 	"config" : {    
-		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
-		"tasks.max" : 1,
-		"value.converter": "io.confluent.connect.avro.AvroConverter",    
-		"key.converter": "org.apache.kafka.connect.storage.StringConverter",    
-		"value.converter.schema.registry.url": "http://localhost:8081",   
-		"transforms" : "createKey",   
-		"transforms.createKey.fields" : "URL",    
-		"transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",    
-		"cassandra.contact.points" : [Private_IPs],
-		"cassandra.keyspace" : "combined_dist",
-		"topics" : "TOP_STREAM_PART",    
-		"cassandra.offset.storage.table" : "top_offsets"  
-	}
+		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",
+    "tasks.max" : 1,
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "transforms" : "createKey",
+    "transforms.createKey.fields" : "URL",
+    "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
+    "cassandra.contact.points" : [Private_IPs],
+    "cassandra.keyspace" : "combined_dist",
+    "topics" : "TOP_STREAM_PART",
+    "cassandra.offset.storage.table" : "top_offsets"
+  }
 }' http://localhost:8083/connectors
