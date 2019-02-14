@@ -6,7 +6,7 @@ A video demo of the application can be found [here]().
 # Table of Contents
 1. [Motivation](README.md#Motivation)
 2. [Pipeline](README.md#Pipeline)
-3. [Starting Project](README.md#Starting-Project)
+3. [Setting Up New-news](README.md#setting-up-new-news)
     1. [Setting Up Clusters](README.md#setting-up-clusters)
         1. [Confluent Kafka](README.md#setting-up-confluent)
         2. [Cassandra](README.md#setting-up-cassandra)
@@ -30,7 +30,7 @@ New-news runs a pipeline on the AWS cloud, using the following cluster configura
 
 For the ingestion and analysis portion of my pipeline I am using the Confluent Kafka platform which offers a Kafka streams API built on top of Kafka. First data is generated for both pageviews and top-articles and ingest them into Kafka. Then KSQL (Kafka SQL) queries these streams of data and joins them to create a combined stream that tracks when a user has visited a top suggested article. The combined stream and the top-articles stream are then ingested into Cassandra using Confluent's Cassandra Sink Connector. Finally, it is possible to query the Cassandra database from a Dash frontend.
 
-# Starting project
+# Setting Up New-news
 
 This guide makes use of Pegasus (documentation [here](https://github.com/InsightDataScience/pegasus)). The .yml files necessary to set up each individual cluster are found in ./config/pegasus. Make sure to input the subnet id, PEM keypair, and security group ids for your AWS account. Follow the pegasus installation instructions up through the end of the sections labelled "Setting up a newly provisioned AWS cluster" for your Kafka, Cassandra, and Dash clusters (note: Dash only has one node and thus has no workers).
 
