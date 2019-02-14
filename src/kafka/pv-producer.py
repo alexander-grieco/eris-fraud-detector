@@ -7,12 +7,11 @@ import uuid
 import numpy
 import time
 import json
-from webpage_info import WEBSITE_NAME, GROUP
+from webpage_info import WEBSITE_NAME, GROUP, NUM_USERS,NUM_PAGES
 from schema_info import key_schema_pv_str, value_schema_pv_str
 import argparse
 
-# configuartions for producer
-NUM_USERS = 5000
+# topic to produce to
 PV_TOPIC = 'pageview'
 
 # loading the schema from schema definitions
@@ -43,7 +42,7 @@ class ProducerAvroPV(object):
             email = numpy.random.choice(self.emails)
 
             #website url with random page and group
-            url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,101))
+            url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
 
             #timestamp of pageview
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

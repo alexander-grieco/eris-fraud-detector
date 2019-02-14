@@ -21,7 +21,7 @@ def prepare_top_query(session):
 #     return session.prepare(query)
 
 def prepare_combined_query(session):
-    query = "select url from combined_real where key=? allow filtering"
+    query = "select url from combined_real where key=?"
     return session.prepare(query)
 
 # def get_combined(email, prepared_query, session):
@@ -35,7 +35,6 @@ def prepare_combined_query(session):
 
 def get_combined(email, top, prepared_query, session):
     count_final = []
-
     try:
         for website in top:
             key = email + str(website)

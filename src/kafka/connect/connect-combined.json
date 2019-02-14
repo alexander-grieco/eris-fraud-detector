@@ -13,8 +13,8 @@
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
 
     "cassandra.contact.points" : "10.0.0.9",
-    "cassandra.keyspace" : "combined",
-    "topics" : "COMBINED_REAL",
+    "cassandra.keyspace" : "combined_dist",
+    "topics" : "COMBINED_FINAL",
     "cassandra.offset.storage.table" : "combined_offset"
   }
 }

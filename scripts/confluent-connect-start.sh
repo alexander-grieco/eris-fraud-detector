@@ -1,1 +1,0 @@
-peg sshcmd-cluster kafka-cluster "~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties ~/confluent/connect-configs/combined-cass.json ~/confluent/connect-configs/top-table-cass.json"

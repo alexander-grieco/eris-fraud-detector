@@ -6,7 +6,7 @@ import uuid
 import numpy
 import time
 import json
-from webpage_info import WEBSITE_NAME, GROUP
+from webpage_info import WEBSITE_NAME, GROUP, NUM_USERS, NUM_PAGES
 from schema_info import key_schema_str, value_schema_str
 import argparse
 
@@ -36,9 +36,9 @@ class ProducerAvroArticles(object):
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
             # list of top ten articles
-            for i in range(10):
+            for i in range(15):
                 #website url with random page and group
-                url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,101))
+                url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
 
                 # kev,value definition
                 key = {
