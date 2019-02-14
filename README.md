@@ -42,7 +42,7 @@ Next you need to use the files list in this repository under ./config/confluent 
 Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers
 
 ## Setting up Cassandra
-On each Cassandra node, install the most recent Cassandra 3.0 download from (this)[https://cassandra.apache.org/download/] page. Then, go to <path-to-Cassandra>/conf and edit the cassandra.yaml file according to the directions under the "Configure Cassandra" headline on (this)[https://github.com/InsightDataScience/data-engineering-ecosystem/wiki/cassandra] page. Make sure to run the "cassandra" command to build the configuration after you are done editing the cassandra.yaml file.
+On each Cassandra node, install the most recent Cassandra 3.0 download from [this](https://cassandra.apache.org/download/) page. Then, go to <path-to-Cassandra>/conf and edit the cassandra.yaml file according to the directions under the "Configure Cassandra" headline on [this](https://github.com/InsightDataScience/data-engineering-ecosystem/wiki/cassandra) page. Make sure to run the "cassandra" command to build the configuration after you are done editing the cassandra.yaml file.
 
 
 ## Setting up Dash
