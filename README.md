@@ -30,11 +30,12 @@ Check [this](https://docs.confluent.io/current/installation/installing_cp/zip-ta
 
 Unzip the file and rename the parent directory to confluent.
 
+Next you need to update the following configuration files using the matching configuration files listed in this repo under ./config/confluent:
+* confluent/etc/kafka/zookeeper.properties
+* confluent/etc/kafka/server.properties
+* confluent/etc/schema-registry/schema-registry.properties
+* confluent/etc/schema-registry/connect-avro-distributed.properties
+* confluent/etc/confluent-control-center/control-center.properties
+* confluent/etc/ksql/ksql-server.properties
 
-cd into ./confluent/etc/kafka and change the zookeeper.properties and server.properties files to the files located in this repo at ./config/confluent. Make sure to update the public DNS and private IPs values to your individual instances.
-
-cd ../schema-registry and change the schema-registry.properties and connect-avro-distributed.properties files to the file in the repo, again making sure to change the public DNS and private IPs to your individual instances.
-
-cd ../confluent-control-center and change the control-center.properties file to the file in the repo, again making sure to change the public DNS and private IPs to your individual instances.
-
-cd ../ksql and change the ksql-server.properties file to the file in the repo, again making sure to change the public DNS and private IPs to your individual instances.
+Make sure to update any public DNS address or private IPs to match the configuration of your servers
