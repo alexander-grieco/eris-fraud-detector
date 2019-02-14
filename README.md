@@ -79,7 +79,9 @@ Run the following commands on each Kafka broker BEFORE going to next step (assum
 ### Loading Connectors
 Then, on any of your Kafka brokers, run the following two commands to load the respective connectors to transfer data from Kafka to Cassandra. Again, remember to update the input for cassandra.contact.points with your Cassandra cluster's private ips.
 
-1. curl -X POST -H "Content-Type: application/json" --data '{  
+1. curl -X POST -H "Content-Type: application/json" --data '
+```json
+{  
 	"name" : "cassandra-sink-combined",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",
@@ -89,14 +91,16 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "transforms" : "createKey",
     "transforms.createKey.fields" : "KEY",
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
-    "cassandra.contact.points" : [Private_IPs],
+    "cassandra.contact.points" : "[Private_IPs]",
     "cassandra.keyspace" : "combined_dist",
     "topics" : "COMBINED_FINAL",
     "cassandra.offset.storage.table" : "combined_offset"  
 	}
-}' http://localhost:8083/connectors
+}' ``` http://localhost:8083/connectors
 
-2. curl -X POST -H "Content-Type: application/json" --data '{  
+2. curl -X POST -H "Content-Type: application/json" --data '
+```json
+{  
 	"name" : "cassandra-sink-top",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",
@@ -107,9 +111,9 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "transforms" : "createKey",
     "transforms.createKey.fields" : "URL",
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
-    "cassandra.contact.points" : [Private_IPs],
+    "cassandra.contact.points" : "[Private_IPs]",
     "cassandra.keyspace" : "combined_dist",
     "topics" : "TOP_STREAM_PART",
     "cassandra.offset.storage.table" : "top_offsets"
   }
-}' http://localhost:8083/connectors
+}' ```http://localhost:8083/connectors
