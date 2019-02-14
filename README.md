@@ -1,7 +1,7 @@
 # New-news
 My Insight Data Engineering project for the NY Winter 2019 session. New-news is an application that filter's suggestions based on a user's history.
 
-A video demo of the application can be found [here](https://www.youtube.com/watch?v=fFACYU7QMPk).
+A video demo of the application can be found [here]().
 
 # Table of Contents
 1. [Motivation](README.md#Motivation)
