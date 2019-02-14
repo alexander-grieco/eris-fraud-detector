@@ -11,9 +11,9 @@ A video demo of the application can be found [here]().
         1. [Confluent Kafka](README.md#setting-up-confluent)
         2. [Cassandra](README.md#setting-up-cassandra)
         3. [Dash](README.md#setting-up-dash)
-    2. [Running New-news](README.md#running-new-news)
-        1. [Loading Kafka Services](README.md#loading-kafka-services)
-        2. [Loading Connectors](README.md#loading-connectors)
+4. [Running New-news](README.md#running-new-news)
+    1. [Loading Kafka Services](README.md#loading-kafka-services)
+    2. [Loading Connectors](README.md#loading-connectors)
 
 
 # Motivation
@@ -65,8 +65,8 @@ On each Cassandra node, install the most recent Cassandra 3.0 download from [thi
 Transfer all files from the ./src/app folder into dash and then follow [this](https://www.digitalocean.com/community/tutorials/how-to-deploy-python-wsgi-apps-using-gunicorn-http-server-behind-nginx) tutorial to host the dash app on your dash server.
 
 
-## Running New-news
-### Loading Kafka Services
+# Running New-news
+## Loading Kafka Services
 Run the following commands on each Kafka broker BEFORE going to next step (assumes your confluent folder is in the home directory)
 1. ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties
 2. ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties
@@ -76,7 +76,7 @@ Run the following commands on each Kafka broker BEFORE going to next step (assum
 6. ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql
 
 
-### Loading Connectors
+## Loading Connectors
 Then, on any of your Kafka brokers, run the following two commands to load the respective connectors to transfer data from Kafka to Cassandra. Again, remember to update the input for cassandra.contact.points with your Cassandra cluster's private ips.
 
 1. curl -X POST -H "Content-Type: application/json" --data '{  
