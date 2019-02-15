@@ -61,7 +61,7 @@ class ProducerAvroPV(object):
 
             # producing entry to topic
             self.producer.produce(topic = self.topic, value=value, key=key)
-            time.sleep(0.01);
+            time.sleep(0.001);
 
         print("\nFlushing records")
         self.producer.flush()

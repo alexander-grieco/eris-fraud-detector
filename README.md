@@ -70,7 +70,7 @@ Run the following commands on each Kafka broker BEFORE going to next step (assum
 1. nohup ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> zookeeper.out&
 2. nohup ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> kafka.out&
 3. nohup ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> schema_registry.out&
-4. (Only do this on master broker) Start data generation by running this command: bash ~/scripts/kafka-producer.sh 5 produce. This script starts the data generation. The 5 refers to the number of tmux sessions that will be started and the "produce" input is the name of the session. To stop data generation simply run this command: tmux kill-session -t produce.
+4. (Only do this on master broker) Start data generation by running this command: bash ~/new-news/scripts/kafka-producer.sh 3 produce. This script starts the data generation. The 5 refers to the number of tmux sessions that will be started and the "produce" input is the name of the session. To stop data generation simply run this command: tmux kill-session -t produce.
 5. nohup ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> connect.out&
 6. nohup ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql &> ksql.out&
 
