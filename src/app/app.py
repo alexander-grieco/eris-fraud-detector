@@ -13,8 +13,8 @@ from flask_caching import Cache
 
 NUM_USERS = 5000 #number of users
 faker = Faker()
-HOST=['10.0.0.9']
-KEYSPACE='combined'
+HOST=['10.0.0.9', '10.0.0.11', '10.0.0.6']
+KEYSPACE='combined_dist'
 WEBSITE='https://fakenews.com/'
 
 # Connect to Cassandra and prepare queries for later execution

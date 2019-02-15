@@ -20,7 +20,7 @@ def prepare_top_query(session):
 
 # prepares the combined query for later use
 def prepare_combined_query(session):
-    query = "select url from combined_real where key=?" # don't need 'allow filtering' because key is table key
+    query = "select url from combined_final where key=?" # don't need 'allow filtering' because key is table key
     return session.prepare(query)
 
 # peform the get combined query

@@ -8,5 +8,5 @@ GROUP = ['politics/', 'sports/', 'international/', 'business/',
 
 
 # number of users
-NUM_USERS = 25000
-NUM_PAGES = 1001
+NUM_USERS = 10000
+NUM_PAGES = 101

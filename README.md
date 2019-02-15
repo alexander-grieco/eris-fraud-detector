@@ -66,13 +66,13 @@ Transfer all files from the ./src/app folder into dash and then follow [this](ht
 
 # Running New-news
 ## Loading Kafka Services
-Run the following commands on each Kafka broker BEFORE going to next step (assumes your confluent folder is in the home directory of your brokers). The "nohup" command will make the services continue to run even after you log off or close your terminal session. Each nohup command also redirects its output to a log file for debugging purposes.
-1. nohup ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> zookeeper.out&
-2. nohup ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> kafka.out&
-3. nohup ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> schema_registry.out&
-4. (Only do this on master broker) Start data generation by running this command: bash ~/new-news/scripts/kafka-producer.sh 3 produce. This script starts the data generation. The 5 refers to the number of tmux sessions that will be started and the "produce" input is the name of the session. To stop data generation simply run this command: tmux kill-session -t produce.
-5. nohup ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> connect.out&
-6. nohup ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql &> ksql.out&
+Run the following commands on your local machine where you have pegasus installed. The "nohup" command will make the services continue to run even after you log off or close your terminal session. Each nohup command also redirects its output to a log file for debugging purposes.
+1. peg sshcmd-cluster kafka-cluster "nohup ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> zookeeper.out&"
+2. peg sshcmd-cluster kafka-cluster "nohup ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> kafka.out&"
+3. peg sshcmd-cluster kafka-cluster "nohup ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> schema_registry.out&"
+4. peg sshcmd-node kafka-cluster 1 "bash ~/new-news/scripts/kafka-producer.sh [NUM INSTANCES] [SESSION NAME]" where num instances is the number of instances you want to be created, i.e. the number of producers, and session name is an arbitrary name you give to the session . This script starts the data generation. To stop data generation simply run this command: tmux kill-session -t [SESSION NAME].
+5. peg sshcmd-cluster kafka-cluster "nohup ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> connect.out&"
+6. peg sshcmd-cluster kafka-cluster "nohup ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/new-news/src/kafka/ksql/queries.sql &> ksql.out&"
 
 
 ## Loading Connectors
