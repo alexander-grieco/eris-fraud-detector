@@ -15,7 +15,7 @@ def start_connection(host, keyspace):
 
 # prepares the top articles query for later use
 def prepare_top_query(session):
-	query = "select url from top_stream_part where top_rowtime>=? allow filtering"
+	query = "select url from top_stream_part where top_rowtime>=?"
 	return session.prepare(query)
 
 # prepares the combined query for later use

@@ -15,7 +15,7 @@ create stream top_stream_test
 create stream top_stream_part as
   select *, ROWTIME as top_rowtime
   from top_stream_test
-  partition by url;
+  partition by top_rowtime;
 
 
 /* create combined stream */
@@ -41,7 +41,7 @@ create stream combined_part as
 create stream combined_final as
   select url,
           email,
-          top_rowtime, 
+          top_rowtime,
           ROWKEY as key
   from combined_part
   where ROWTIME - top_rowtime <= 60000;
