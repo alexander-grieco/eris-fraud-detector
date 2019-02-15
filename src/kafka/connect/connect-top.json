@@ -11,7 +11,7 @@
     "transforms" : "createKey",
     "transforms.createKey.fields" : "URL",
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
-    "cassandra.contact.points" : "10.0.0.9",
+    "cassandra.contact.points" : "[CASSANDRA PRIVATE IPs]",
     "cassandra.keyspace" : "combined_dist",
     "topics" : "TOP_STREAM_PART",
     "cassandra.offset.storage.table" : "top_offsets"

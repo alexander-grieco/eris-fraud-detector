@@ -12,7 +12,7 @@
     "transforms.createKey.fields" : "KEY",
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",
 
-    "cassandra.contact.points" : "10.0.0.9",
+    "cassandra.contact.points" : "[CASSANDRA PRIVATE IPs]",
     "cassandra.keyspace" : "combined_dist",
     "topics" : "COMBINED_FINAL",
     "cassandra.offset.storage.table" : "combined_offset"

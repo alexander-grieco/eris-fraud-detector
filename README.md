@@ -66,13 +66,13 @@ Transfer all files from the ./src/app folder into dash and then follow [this](ht
 
 # Running New-news
 ## Loading Kafka Services
-Run the following commands on each Kafka broker BEFORE going to next step (assumes your confluent folder is in the home directory)
-1. ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties
-2. ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties
-3. ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties
+Run the following commands on each Kafka broker BEFORE going to next step (assumes your confluent folder is in the home directory of your brokers). The "nohup" command will make the services continue to run even after you log off or close your terminal session. Each nohup command also redirects its output to a log file for debugging purposes.
+1. nohup ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> zookeeper.out&
+2. nohup ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> kafka.out&
+3. nohup ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> schema_registry.out&
 4. (Only do this on master broker) Start data generation by running this command: bash ~/scripts/kafka-producer.sh 5 produce. This script starts the data generation. The 5 refers to the number of tmux sessions that will be started and the "produce" input is the name of the session. To stop data generation simply run this command: tmux kill-session -t produce.
-5. ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties
-6. ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql
+5. nohup ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> connect.out&
+6. nohup ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/src/kafka/ksql/queries.sql &> ksql.out&
 
 
 ## Loading Connectors
@@ -88,7 +88,7 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "transforms" : "createKey",   
     "transforms.createKey.fields" : "KEY",    
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",   
-    "cassandra.contact.points" : "[Private_IPs]",   
+    "cassandra.contact.points" : "Private_IPs",   
     "cassandra.keyspace" : "combined_dist",   
     "topics" : "COMBINED_FINAL",    
     "cassandra.offset.storage.table" : "combined_offset"          
@@ -106,9 +106,13 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "transforms" : "createKey",   
     "transforms.createKey.fields" : "URL",    
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",   
-    "cassandra.contact.points" : "[Private_IPs]",   
+    "cassandra.contact.points" : "Private_IPs",   
     "cassandra.keyspace" : "combined_dist",   
     "topics" : "TOP_STREAM_PART",   
     "cassandra.offset.storage.table" : "top_offsets"    
   }
 }' http://localhost:8083/connectors
+
+Ensure that both connectors have been loaded properly by running the command: curl localhost:8083/connectors
+
+This will list the currently active connectors. You should see something like: "[cassandra-sink-combined, cassandra-sink-top]"
