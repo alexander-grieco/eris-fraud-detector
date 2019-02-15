@@ -104,7 +104,7 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",    
     "value.converter.schema.registry.url": "http://localhost:8081",   
     "transforms" : "createKey",   
-    "transforms.createKey.fields" : "TOP_ROWTIME",    
+    "transforms.createKey.fields" : "URL",    
     "transforms.createKey.type" : "org.apache.kafka.connect.transforms.ValueToKey",   
     "cassandra.contact.points" : "Private_IPs",   
     "cassandra.keyspace" : "combined_dist",   
