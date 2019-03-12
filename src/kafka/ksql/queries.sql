@@ -44,4 +44,5 @@ create stream combined_final as
           top_rowtime,
           ROWKEY as key
   from combined_part
+  partition by key
   where ROWTIME - top_rowtime <= 60000;
