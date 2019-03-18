@@ -40,10 +40,11 @@ cache = Cache(app.server, config={
     'CACHE_TYPE': 'filesystem',
     'CACHE_DIR': 'cache-directory'
 })
-TIMEOUT = 55
+TIMEOUT = 55 # 55 seconds since top_articles is updated every 60 seconds
 
-
-
+'''
+Defining the HTML structure of the webpage
+'''
 app.layout = html.Div(children=[
     # title and subtitle
     html.H1(children='New-News'),
@@ -60,16 +61,22 @@ app.layout = html.Div(children=[
     # Top articles table that will always show up on the right side of user's screen
     html.Div(children=html.Div(id='top_articles'), className='row', style={'width':'25%', 'position':'fixed', 'top':'150px', 'right':20}),
 
-    # area for tables when a user is selected from the dropdown shows top
-    #suggestions (up to 15) and lists which websites from the current list
-    #of top-websites that the user has already visited
+    '''
+    Area for tables when a user is selected from the dropdown shows top
+    suggestions (up to 15) and lists which websites from the current list
+    of top-websites that the user has already visited
+    '''
     html.Div(children=html.Div(id='tables'), className='row', style={'width':'72%', 'margin-bottom': 100, 'margin-left':'8%'}),
 
     # update interval of 5 seconds - makes sure tables are updated every 5 seconds
     dcc.Interval(id='table_update', interval=5*1000, n_intervals=0),
 ])
 
-# callback for user tables, gets called every time a user is selected from dropdown and every 5 seconds
+'''
+Updates user tables (if any exist) every 5 seconds and every time a user is added from the dropdown
+menu. Makes call to cassandra database (unless info is stored in cache). When data is returned,
+creates table for each user in dropdown with the appropriate information
+'''
 @app.callback(
     dash.dependencies.Output('tables', 'children'),
     [dash.dependencies.Input('user_email', 'value'),
@@ -128,8 +135,10 @@ def update_combined(user_email, table_update):
         )
     return tables # return list of dash datatables to display
 
-
-# creates table of top articles
+'''
+Updates top_articles table every 5 seconds. Makes call to cassandra database (unless info is stored
+in cache). When data is returned, updates table with list of current top 15 articles.
+'''
 @app.callback(
     dash.dependencies.Output('top_articles', 'children'),
     [dash.dependencies.Input('table_update', 'n_intervals')])
@@ -154,6 +163,7 @@ def update_top(table_update):
         },
     ))], style={'textAlign':'center'}))
     return table # returns table to display
+
 
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=8080)
