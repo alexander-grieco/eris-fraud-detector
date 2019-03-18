@@ -6,48 +6,73 @@ import uuid
 import numpy
 import time
 import json
-from webpage_info import WEBSITE_NAME, GROUP, NUM_USERS, NUM_PAGES
+from webpage_info import WEBSITE_NAME, GROUP, NUM_PAGES
 from schema_info import key_schema_str, value_schema_str
 import argparse
 
-# loading schema to top articles
-value_schema = avro.loads(value_schema_str)
-key_schema = avro.loads(key_schema_str)
-
-# producer class for top-articles
+'''
+TOP_ARTICLES PRODUCER CLASS
+-- Creates an object that stores the Confluent Kafka producer as well as the schema
+definition of top_articles. Has the method top_produce which does the actual producing
+'''
 class ProducerAvroArticles(object):
     def __init__(self, server, schema_registry, topic):
+        # Key Schema definition for top articles
+        self.key = avro.loads("""
+        {
+            "namespace": "articles",
+            "name":"key",
+            "type":"record",
+            "fields" : [
+                {"name" : "url", "type" : "string"}
+            ]
+        }
+        """)
+
+        # Value Schema definition for top articles
+        self.value = avro.loads("""
+        {
+           "namespace": "articles",
+           "name": "value",
+           "type": "record",
+           "fields" : [
+                {"name" : "url", "type" : "string"},
+                {"name" : "timestamp", "type" : "string"}
+           ]
+        }
+        """)
+
+
         # define top-articles producer with avro serialization
         self.producer = AvroProducer(
             {
                 'bootstrap.servers': server,
                 'schema.registry.url': schema_registry
             },
-            default_key_schema=key_schema,
-            default_value_schema=value_schema
+            default_key_schema=self.key,
+            default_value_schema=self.value
         )
         self.topic = topic
 
-    # top-articles producer
+    '''
+    PRODUCE RECORD
+    -- get the current time, use as timestamp for all 15 top pages
+    -- loop 15 times and do the following each time:
+        - Create the url by randomly selecting a subsection (i.e. GROUP) and randomly selecting
+        a number for the page number within that subsection(ex: politics/page56). This is prepended
+        by the name of the entire website to give a complete URL.
+        - Set the key,value pair values and produce the topic to the kafka cluster
+    -- Repeat every 60 seconds
+    '''
     def top_produce(self):
         while True:
-            # timestamp for this round of top-articles
-            # uses one timestamp for each round of top-articles
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            # list of top ten articles
             for i in range(15):
-                #website url with random page and group
                 url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
 
                 # kev,value definition
-                key = {
-                    "url" : url
-                }
-                value = {
-                    "url" : url,
-                    "timestamp" : timestamp
-                }
+                key = {"url" : url}
+                value = {"url" : url, "timestamp" : timestamp}
 
                 # produce top-articles to topic
                 self.producer.produce(topic = self.topic, value=value, key=key)
@@ -58,25 +83,16 @@ class ProducerAvroArticles(object):
         self.producer.flush()
 
 
-def main(args):
+if __name__ == '__main__':
     # getting arguments for producer
-    server = args.bootstrap_servers
-    schema_registry = args.schema_registry
-    topic = args.topic
+    server = sys.argv[1]            # usually: localhost:9092
+    schema_registry = sys.argv[2]   # usually: http://localhost:8081
+    topic = sys.argv[3]             # usually: top_articles
+
+    # loading schema to top articles
+    value_schema = avro.loads(value_schema_str)
+    key_schema = avro.loads(key_schema_str)
 
     #defining producer and starting production
     p = ProducerAvroArticles(server, schema_registry, topic)
     p.top_produce()
-
-
-if __name__ == '__main__':
-    # argument parser to give the option of defining inputs
-    parser = argparse.ArgumentParser(description="Top article producer")
-    parser.add_argument('-b', dest="bootstrap_servers",
-                        default="localhost:9092", help="Bootstrap broker(s) (host[:port])")
-    parser.add_argument('-s', dest="schema_registry",
-                        default="http://localhost:8081", help="Schema Registry (http(s)://host[:port]")
-    parser.add_argument('-t', dest="topic", default="top_articles",
-                        help="Topic name")
-
-    main(parser.parse_args())

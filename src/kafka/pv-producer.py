@@ -8,46 +8,71 @@ import numpy
 import time
 import json
 from webpage_info import WEBSITE_NAME, GROUP, NUM_USERS,NUM_PAGES
-from schema_info import key_schema_pv_str, value_schema_pv_str
 import argparse
 
-# topic to produce to
-PV_TOPIC = 'pageview'
 
-# loading the schema from schema definitions
-value_schema_pv = avro.loads(value_schema_pv_str)
-key_schema_pv = avro.loads(key_schema_pv_str)
-
-
-# Producer for pageviews
+'''
+PAGEVIEW PRODUCER CLASS
+-- Creates an object that stores the Confluent Kafka producer as well as the schema
+definition of the pageview. Has the method pv_produce which does the actual producing
+'''
 class ProducerAvroPV(object):
 
     def __init__(self, server, schema_registry, topic, emails):
+        # key schema definition for a pageview
+        self.key = avro.loads("""
+        {
+            "namespace": "pageview",
+            "name":"key",
+            "type":"record",
+            "fields" : [
+                {"name" : "pageview_id", "type" : "string"}
+            ]
+        }
+        """)
+
+        # Value Schema definition for a pageview
+        self.value = avro.loads("""
+        {
+           "namespace": "pageview",
+           "name": "value",
+           "type": "record",
+           "fields" : [
+                {"name" : "email", "type" : "string"},
+                {"name" : "url", "type" : "string"},
+                {"name" : "timestamp", "type" : "string"},
+                {"name" : "pageview_id", "type" : "string"}
+           ]
+        }
+        """)
+
         # define pageview producer with avro serialization
         self.producer = AvroProducer(
             {
                 'bootstrap.servers': server,
                 'schema.registry.url': schema_registry
             },
-            default_key_schema=key_schema_pv,
-            default_value_schema=value_schema_pv
+            default_key_schema=self.key,
+            default_value_schema=self.value
         )
-        self.topic = topic #topic to produce to
+        self.topic = topic
         self.emails = emails
 
-    # pageview producer
+    '''
+    PRODUCE RECORD
+    -- Select a random user from list of emails
+    -- Create the page they are 'visiting' by randomly selecting a subsection (i.e. GROUP) and
+    randomly selecting a number for the page number within that subsection(ex: politics/page56).
+    This is prepended by the name of the entire website to give a complete URL.
+    -- Further get the current time and generate a unique pageview id.
+    -- Finally set the key,value pair values and produce the topic to the kafka cluster
+    '''
     def pv_produce(self):
         while True:
-            # email list of users
+            # initializing information
             email = numpy.random.choice(self.emails)
-
-            #website url with random page and group
             url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
-
-            #timestamp of pageview
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            # universally unique id for pageview
             pageview_id = str(uuid.uuid4())
 
             # setting key,value pair
@@ -67,32 +92,19 @@ class ProducerAvroPV(object):
         self.producer.flush()
 
 
-def main(args):
+if __name__ == '__main__':
     # getting arguments for producer
-    server = args.bootstrap_servers
-    schema_registry = args.schema_registry
-    topic = args.topic
+    server = sys.argv[1]            # usually: localhost:9092
+    schema_registry = sys.argv[2]   # usually: http://localhost:8081
+    topic = sys.argv[3]             # usually: pageview
 
-    # creating fake list of emails
+    # creating list of emails
     faker = Faker()
     emails = []
     for i in range(NUM_USERS):
         faker.seed(i + 9092) # seed to ensure consistent emails
         emails.append(faker.ascii_safe_email())
 
-    # defining producer and beginning production
+    # create producer and begin producing to kafka cluster
     p = ProducerAvroPV(server, schema_registry, topic, emails)
     p.pv_produce()
-
-
-if __name__ == '__main__':
-    # argument parser to give the option of defining inputs
-    parser = argparse.ArgumentParser(description="Pageview producer")
-    parser.add_argument('-b', dest="bootstrap_servers",
-                        default="localhost:9092", help="Bootstrap broker(s) (host[:port])")
-    parser.add_argument('-s', dest="schema_registry",
-                        default="http://localhost:8081", help="Schema Registry (http(s)://host[:port]")
-    parser.add_argument('-t', dest="topic", default="pageview",
-                        help="Topic name")
-
-    main(parser.parse_args())

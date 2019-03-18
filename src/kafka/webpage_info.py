@@ -1,4 +1,6 @@
-
+'''
+This information is shared between the pageview and top_articles producer files
+'''
 # main website url
 WEBSITE_NAME = 'https://fakenews.com/'
 
