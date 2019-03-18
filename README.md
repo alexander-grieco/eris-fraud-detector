@@ -21,5 +21,5 @@ For the ingestion and analysis portion of my pipeline I am using the Confluent K
 ## Technologies Used
 * Confluent Kafka **v5.1**
 * Cassandra **v3.0.18**
-* Dash **v0.39.0
+* Dash **v0.39.0**
 * Python **v2.7**
