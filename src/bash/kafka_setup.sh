@@ -18,6 +18,7 @@ peg install ${CLUSTER_NAME} environment
 peg sshcmd-cluster ${CLUSTER_NAME} "curl -O http://packages.confluent.io/archive/5.1/confluent-5.1.1-2.11.tar.gz"
 peg sshcmd-cluster ${CLUSTER_NAME} "tar -zxf confluent-5.1.1-2.11.tar.gz"
 peg sshcmd-cluster ${CLUSTER_NAME} "mv confluent-5.1.1 confluent"
+peg sshcmd-cluster ${CLUSTER_NAME} "~/confluent/bin/confluent-hub install confluentinc/kafka-connect-cassandra:latest"
 
 # install python libraries
 peg sshcmd-cluster ${CLUSTER_NAME} "pip install faker"

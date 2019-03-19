@@ -47,3 +47,6 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
 Ensure that both connectors have been loaded properly by running the command: `curl localhost:8083/connectors`
 
 This will list the currently active connectors. You should see something like: "[cassandra-sink-combined, cassandra-sink-top]"
+
+## Stopping New-news
+Run the command ```bash <path-to-newnews>/src/bash/kafka-stop.sh```
