@@ -1,18 +1,25 @@
 # Running New-news
 ## Loading Kafka Services
 Run the following commands on your local machine:
-1. `peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> ~/confluent/logs/zookeeper.out&"`
-2. `peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> ~/confluent/logs/kafka.out&"`
-3. `peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> ~/confluent/logs/schema_registry.out&"`
-4. `peg sshcmd-node kafka-cluster 1 "bash ~/new-news/scripts/kafka-producer.sh 5 produce"`
-5. `peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> ~/confluent/logs/connect.out&"`
-6. `peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/new-news/src/kafka/ksql/queries.sql &> ~/confluent/logs/ksql.out&"`
+1. ```bash
+peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/zookeeper-server-start ~/confluent/etc/kafka/zookeeper.properties &> ~/confluent/logs/zookeeper.out&"```
+2. ```bash
+peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/kafka-server-start ~/confluent/etc/kafka/server.properties &> ~/confluent/logs/kafka.out&"```
+3. ```bash
+peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/schema-registry-start  ~/confluent/etc/schema-registry/schema-registry.properties &> ~/confluent/logs/schema_registry.out&"```
+4. ```bash
+peg sshcmd-node kafka-cluster 1 "bash ~/new-news/scripts/kafka-producer.sh 5 produce"```
+5. ```bash
+peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/connect-distributed ~/confluent/etc/schema-registry/connect-avro-distributed.properties &> ~/confluent/logs/connect.out&"```
+6. ```bash
+peg sshcmd-cluster kafka-cluster "nohup sudo ~/confluent/bin/ksql-server-start ~/confluent/etc/ksql/ksql-server.properties --queries-file ~/new-news/src/kafka/ksql/queries.sql &> ~/confluent/logs/ksql.out&"```
 
 
 ## Loading Connectors
 Then, on any of your Kafka brokers, run the following two commands to load the respective connectors to transfer data from Kafka to Cassandra. Again, remember to update the input for cassandra.contact.points with your Cassandra cluster's private ips.
 
-1. curl -X POST -H "Content-Type: application/json" --data '{  
+1. ```bash
+curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-combined",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",     
@@ -24,9 +31,10 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "topics" : "COMBINED_FINAL",    
     "cassandra.offset.storage.table" : "combined_offset"          
 	}
-}' http://localhost:8083/connectors
+}' http://localhost:8083/connectors```
 
-2. curl -X POST -H "Content-Type: application/json" --data '{  
+2. ```bash
+curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-top",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
@@ -42,7 +50,7 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "topics" : "TOP_STREAM_PART",   
     "cassandra.offset.storage.table" : "top_offsets"    
   }
-}' http://localhost:8083/connectors
+}' http://localhost:8083/connectors```
 
 Ensure that both connectors have been loaded properly by running the command: `curl localhost:8083/connectors`
 

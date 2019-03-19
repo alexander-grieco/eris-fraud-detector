@@ -1,4 +1,4 @@
-#Setting Up New-news
+# Setting Up New-news
 This guide makes use of Pegasus (documentation [here](https://github.com/InsightDataScience/pegasus)). The .yml files necessary to set up each individual cluster are found in <path to project>/docs/config/pegasus. Make sure to input the subnet id, PEM keypair, and security group ids for your AWS account in each configuration file.
 
 ## Setting up Clusters
@@ -6,11 +6,11 @@ This guide makes use of Pegasus (documentation [here](https://github.com/Insight
 Run the command `bash <path to project>/src/bash/kafka_setup.sh` to set up kafka cluster.
 
 After that is complete, you need to use the files list in this repository under <path to project>/docs/config/confluent and update the corresponding files on each Kafka node located in the following directories
-* confluent/etc/kafka/zookeeper.properties
-* confluent/etc/kafka/server.properties
-* confluent/etc/schema-registry/connect-avro-distributed.properties
-* confluent/etc/confluent-control-center/control-center.properties
-* confluent/etc/ksql/ksql-server.properties
+* `~/confluent/etc/kafka/zookeeper.properties`
+* `~/confluent/etc/kafka/server.properties`
+* `~/confluent/etc/schema-registry/connect-avro-distributed.properties`
+* `~/confluent/etc/confluent-control-center/control-center.properties`
+* `~/confluent/etc/ksql/ksql-server.properties`
 
 **Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers**
 
