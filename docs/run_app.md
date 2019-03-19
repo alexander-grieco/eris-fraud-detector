@@ -12,7 +12,7 @@ Run the following commands on your local machine:
 ## Loading Connectors
 Then, on any of your Kafka brokers, run the following two commands to load the respective connectors to transfer data from Kafka to Cassandra. Again, remember to update the input for cassandra.contact.points with your Cassandra cluster's private ips.
 
-1. ```bash curl -X POST -H "Content-Type: application/json" --data '{  
+1. curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-combined",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",     
@@ -24,9 +24,9 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "topics" : "COMBINED_FINAL",    
     "cassandra.offset.storage.table" : "combined_offset"          
 	}
-}' http://localhost:8083/connectors```
+}' http://localhost:8083/connectors
 
-2. ```bash curl -X POST -H "Content-Type: application/json" --data '{  
+2. curl -X POST -H "Content-Type: application/json" --data '{  
 	"name" : "cassandra-sink-top",  
 	"config" : {    
 		"connector.class" : "io.confluent.connect.cassandra.CassandraSinkConnector",    
@@ -42,7 +42,7 @@ Then, on any of your Kafka brokers, run the following two commands to load the r
     "topics" : "TOP_STREAM_PART",   
     "cassandra.offset.storage.table" : "top_offsets"    
   }
-}' http://localhost:8083/connectors```
+}' http://localhost:8083/connectors
 
 Ensure that both connectors have been loaded properly by running the command: `curl localhost:8083/connectors`
 
