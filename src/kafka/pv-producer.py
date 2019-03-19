@@ -8,7 +8,6 @@ import numpy
 import time
 import json
 from webpage_info import WEBSITE_NAME, GROUP, NUM_USERS,NUM_PAGES
-import argparse
 
 
 '''

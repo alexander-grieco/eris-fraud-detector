@@ -7,8 +7,6 @@ import numpy
 import time
 import json
 from webpage_info import WEBSITE_NAME, GROUP, NUM_PAGES
-from schema_info import key_schema_str, value_schema_str
-import argparse
 
 '''
 TOP_ARTICLES PRODUCER CLASS

@@ -11,20 +11,12 @@
 
 # Setting Up New-news
 
-This guide makes use of Pegasus (documentation [here](https://github.com/InsightDataScience/pegasus)). The .yml files necessary to set up each individual cluster are found in ./config/pegasus. Make sure to input the subnet id, PEM keypair, and security group ids for your AWS account. Follow the pegasus installation instructions up through the end of the sections labelled "Setting up a newly provisioned AWS cluster" for your Kafka, Cassandra, and Dash clusters (note: Dash only has one node and thus has no workers).
+This guide makes use of Pegasus (documentation [here](https://github.com/InsightDataScience/pegasus)). The .yml files necessary to set up each individual cluster are found in ./docs/config/pegasus. Make sure to input the subnet id, PEM keypair, and security group ids for your AWS account.
 
 ## Setting up Clusters
 ### Setting up Confluent
-Do the following on each Kafka machine:
 
-Run this command: curl -O http://packages.confluent.io/archive/5.1/confluent-5.1.1-2.11.tar.gz
-
-Check [this](https://docs.confluent.io/current/installation/installing_cp/zip-tar.html#prod-kafka-cli-install) page to make sure you are downloading the latest version (this is the version as of February 14, 2019)
-
-Unzip the file and rename the parent directory to confluent.
-
-
-Next you need to use the files list in this repository under ./config/confluent and update the corresponding files on each Kafka node located in the following directories
+Next you need to use the files list in this repository under ./docs/config/confluent and update the corresponding files on each Kafka node located in the following directories
 * confluent/etc/kafka/zookeeper.properties
 * confluent/etc/kafka/server.properties
 * confluent/etc/schema-registry/schema-registry.properties
@@ -33,8 +25,6 @@ Next you need to use the files list in this repository under ./config/confluent 
 * confluent/etc/ksql/ksql-server.properties
 
 Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers
-
-Then transfer all the contents form the src folder and the scripts folder in this repository to each Kafka broker.
 
 ### Setting up Cassandra
 On each Cassandra node, install the most recent Cassandra 3.0 download from [this](https://cassandra.apache.org/download/) page. Then, go to <path-to-Cassandra>/conf and edit the cassandra.yaml file according to the directions under the "Configure Cassandra" headline on [this](https://github.com/InsightDataScience/data-engineering-ecosystem/wiki/cassandra) page. Make sure to run the "cassandra" command to build the configuration after you are done editing the cassandra.yaml file.
