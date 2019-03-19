@@ -24,3 +24,6 @@ For the ingestion and analysis portion of my pipeline I am using the Confluent K
 * Cassandra **v3.0.18**
 * Dash **v0.39.0**
 * Python **v2.7**
+
+# Running New-news
+To build and run New-news follow the instructions in `<path-to-newnews>/docs/setup.md` and `<path-to-newnews>/docs/run_app.md` respectively.
