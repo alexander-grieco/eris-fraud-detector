@@ -14,7 +14,7 @@ After that is complete, you need to use the files list in this repository under 
 
 **Make sure to update any public DNS addresses or private IPs listed in these files to match the configuration of your servers**
 
-Further, make sure to move this repository to each node in your Kafka cluster.
+**Also, make sure to move this repo file structure to the home path of each node in your Kafka cluster.**
 
 ### Setting up Cassandra
 To set up Cassandra, run the command `bash <path-to-project>/src/bash/cassandra_setup.sh`

@@ -49,4 +49,4 @@ Ensure that both connectors have been loaded properly by running the command: `c
 This will list the currently active connectors. You should see something like: "[cassandra-sink-combined, cassandra-sink-top]"
 
 ## Stopping New-news
-Run the command ```bash <path-to-newnews>/src/bash/kafka-stop.sh```
+Run the command ```bash <path-to-newnews>/src/bash/kafka-stop.sh```. This will delete the connectors, stop the python scripts producing records, and will shut down all services making up Confluent Kafka. 
