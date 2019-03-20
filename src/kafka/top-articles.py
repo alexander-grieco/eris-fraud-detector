@@ -53,6 +53,24 @@ class ProducerAvroArticles(object):
         self.topic = topic
 
     '''
+    Creates a random URL from the namespace of URLs
+    -- Inputs: None
+    -- Outputs: generated URL
+    '''
+    def getUrl(self):
+        return (WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES)))
+
+    '''
+    Sets the key,value pair of the kafka record
+    -- Inputs: url,timestamp
+    -- Outputs: key,value pair of kafka record
+    '''
+    def setKV(self,url,timestamp):
+        key = {"url" : url}
+        value = {"url" : url, "timestamp" : timestamp}
+        return (key,value)
+
+    '''
     PRODUCE RECORD
     -- get the current time, use as timestamp for all 15 top pages
     -- loop 15 times and do the following each time:
@@ -66,11 +84,11 @@ class ProducerAvroArticles(object):
         while True:
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             for i in range(15):
-                url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
+                # generating url
+                url = self.getUrl()
 
                 # kev,value definition
-                key = {"url" : url}
-                value = {"url" : url, "timestamp" : timestamp}
+                key,value = self.setKV(url,timestamp)
 
                 # produce top-articles to topic
                 self.producer.produce(topic = self.topic, value=value, key=key)

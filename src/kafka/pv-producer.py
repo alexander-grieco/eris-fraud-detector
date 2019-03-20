@@ -58,6 +58,34 @@ class ProducerAvroPV(object):
         self.emails = emails
 
     '''
+    Generates information about a pageview
+    -- Inputs: none
+    -- Outputs: email,url,timestamp,pageview_id of record
+    '''
+    def getValues(self):
+        email = numpy.random.choice(self.emails)
+        url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        pageview_id = str(uuid.uuid4())
+        return(email,url,timestamp,pageview_id)
+
+    '''
+    Sets the key,value pair of the record
+    -- Inputs: email,url,timestamp,pageview_id (generated in getValues
+    -- Outputs: key,value definitions for kafka record
+    '''
+    def setKV(self,email,url,timestamp,pageview_id):
+        key = {"pageview_id" : pageview_id}
+        value = {
+            "email": email,
+            "url" : url,
+            "timestamp" : timestamp,
+            "pageview_id" : pageview_id
+        }
+        return (key,value)
+
+
+    '''
     PRODUCE RECORD
     -- Select a random user from list of emails
     -- Create the page they are 'visiting' by randomly selecting a subsection (i.e. GROUP) and
@@ -65,23 +93,13 @@ class ProducerAvroPV(object):
     This is prepended by the name of the entire website to give a complete URL.
     -- Further get the current time and generate a unique pageview id.
     -- Finally set the key,value pair values and produce the topic to the kafka cluster
+    Inputs: none
+    Outputs: none
     '''
     def pv_produce(self):
         while True:
-            # initializing information
-            email = numpy.random.choice(self.emails)
-            url = WEBSITE_NAME + numpy.random.choice(GROUP) + "page" + str(numpy.random.randint(1,NUM_PAGES))
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            pageview_id = str(uuid.uuid4())
-
-            # setting key,value pair
-            key = {"pageview_id" : pageview_id}
-            value = {
-                "email": email,
-                "url" : url,
-                "timestamp" : timestamp,
-                "pageview_id" : pageview_id
-            }
+            # generating values for record and setting the key,value pair
+            key,value = self.setKV(self.getValues())
 
             # producing entry to topic
             self.producer.produce(topic = self.topic, value=value, key=key)

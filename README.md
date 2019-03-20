@@ -15,7 +15,7 @@ New-news runs a pipeline on the AWS cloud, using the following cluster configura
 * three m4.large EC2 instances for Cassandra
 * one t2.micro EC2 instance to run the Dash front-end application
 
-For the ingestion and analysis portion of my pipeline I am using the Confluent Kafka platform which offers a Kafka streams API built on top of Kafka. First data is generated for both pageviews and top-articles and ingest them into Kafka. Then KSQL (Kafka SQL) queries these streams of data and joins them to create a combined stream that tracks when a user has visited a top suggested article. The combined stream and the top-articles stream are then ingested into Cassandra using Confluent's Cassandra Sink Connector. Finally, it is possible to query the Cassandra database from a Dash frontend.
+For the ingestion and analysis portion of my pipeline I am using the Confluent Kafka platform, a powerful streaming library built on top of Kafka. First data is generated for both pageviews and top-articles and is then published to the Kafka cluster. Then KSQL (Kafka SQL) queries these streams of data and joins them to create a combined stream that tracks when a user has visited a top suggested article. The combined stream and the top-articles stream are then consumed into a Cassandra cluster using Confluent's Cassandra Sink Connector. Finally, it is possible to query the Cassandra database from a Dash frontend on a per user basis.
 
 
 ## Technologies Used
